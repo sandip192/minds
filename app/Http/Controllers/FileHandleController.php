@@ -33,20 +33,25 @@ class FileHandleController extends Controller {
 			$fileName     = 'uploads/file/' . 'file.json';
 			if (Storage::disk('public')->exists($fileName)) {
 				$file_exist     = \Storage::disk('public')->get($fileName);
-				$file_content[] = json_decode($file_exist, true);
+                $data = json_decode($file_exist, true);
+               if($data != null){
+                $file_content = $data;
+               }
 			}
-
+///dd($file_content);
 			$random_id               = 'UN' . rand(11111, 99999);
 			$file_data               = $request->all();
 			$file_data['unique_id']  = $random_id;
 			$file_data['created_at'] = date('d-m-Y');
-			$file_content[]          = $file_data;
+            $file_content[]         = $file_data;
 
+///dd($file_content);
 			$fileName = "uploads/file/" . "file.json";
 			$put      = Storage::disk('public')->put($fileName, json_encode($file_content, null, 4), 0777);
 			$get      = json_decode(\Storage::disk('public')->get($fileName));
 
 			$data['message'] = 'Data added successfully.';
+
 			return response($data, 200);
 		} catch (\Exception$e) {
 			$data['data']    = [];
@@ -118,27 +123,37 @@ class FileHandleController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(Request $request) {
-		$id                       = $request->hiddenIds;
-		$attributes               = $request->all();
-		$attributes['unique_id']  = $id;
-		$attributes['created_at'] = NOW();
-		unset($attributes['hiddenIds']);
+		try {
+			$id                       = $request->hiddenIds;
+			$attributes               = $request->all();
+			$attributes['unique_id']  = $id;
+			$attributes['created_at'] = NOW();
+			unset($attributes['hiddenIds']);
 
-		$fileName = 'uploads/file/' . 'file.json';
-		if (Storage::disk('public')->exists($fileName)) {
-			$s        = \Storage::disk('public')->get($fileName);
-			$get      = json_decode($s);
-			$finalArr = [];
-			foreach ($get as $eachTags) {
-				if ($eachTags->unique_id == $id) {
-					$finalArr[] = $attributes;
-				} else {
-					$finalArr[] = $eachTags;
+			$fileName = 'uploads/file/' . 'file.json';
+			if (Storage::disk('public')->exists($fileName)) {
+				$s        = \Storage::disk('public')->get($fileName);
+				$get      = json_decode($s);
+				$finalArr = [];
+				foreach ($get as $eachTags) {
+					if ($eachTags->unique_id == $id) {
+						$finalArr[] = $attributes;
+					} else {
+						$finalArr[] = $eachTags;
+					}
 				}
 			}
+			$put = Storage::disk('public')->put($fileName, json_encode($finalArr, null, 4), 0777);
+			$get = json_decode(\Storage::disk('public')->get($fileName));
+			///toastr()->success('Data has been saved successfully!');
+			$data = [];
+			return response($data, 200);
+
+		} catch (\Exception$e) {
+			$data['data']    = [];
+			$data['message'] = $e->getMessage();
+			return response($data, 500);
 		}
-		$put = Storage::disk('public')->put($fileName, json_encode($finalArr, null, 4), 0777);
-		$get = json_decode(\Storage::disk('public')->get($fileName));
 
 	}
 
@@ -149,20 +164,28 @@ class FileHandleController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function remove(Request $request) {
-		$delete_id = $request->delete_id;
-		$fileName  = 'uploads/file/' . 'file.json';
-		if (Storage::disk('public')->exists($fileName)) {
-			$s        = \Storage::disk('public')->get($fileName);
-			$get      = json_decode($s);
-			$finalArr = [];
-			foreach ($get as $eachTags) {
-				if ($eachTags->unique_id != $delete_id) {
-					$finalArr[] = $eachTags;
+		try {
+			$delete_id = $request->delete_id;
+			$fileName  = 'uploads/file/' . 'file.json';
+			if (Storage::disk('public')->exists($fileName)) {
+				$s        = \Storage::disk('public')->get($fileName);
+				$get      = json_decode($s);
+				$finalArr = [];
+				foreach ($get as $eachTags) {
+					if ($eachTags->unique_id != $delete_id) {
+						$finalArr[] = $eachTags;
+					}
 				}
 			}
+			$put  = Storage::disk('public')->put($fileName, json_encode($finalArr, null, 4), 0777);
+			$get  = json_decode(\Storage::disk('public')->get($fileName));
+			$data = [];
+			return response($data, 200);
+		} catch (\Exception$e) {
+			$data['data']    = [];
+			$data['message'] = $e->getMessage();
+			return response($data, 500);
 		}
-		$put = Storage::disk('public')->put($fileName, json_encode($finalArr, null, 4), 0777);
-		$get = json_decode(\Storage::disk('public')->get($fileName));
 
 	}
 }

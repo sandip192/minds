@@ -13,7 +13,7 @@ $(document).ready(() => {
                 $("#filehanding").html('');
 
                 var html = ''
-console.log(json_file.files.length)
+
                 if (json_file.files !== null || json_file.files.length > 0) {
                     for (var i in json_file.files) {
                         html += '<tr>' +
@@ -116,6 +116,7 @@ $(document).on("click", ".btnupdate", function() {
         },
         success(result) {
             $("#myFilehanding").modal('hide')
+            toastr.success('updated successfully')
         },
         error(e) {
         },
@@ -134,7 +135,8 @@ $(document).on("click", ".delete", function() {
             delete_id
         },
         success(result) {
-
+            fetchListing();
+            toastr.success('removed successfully')
         },
         error(e) {
         },

@@ -14,11 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::get('/', function () {
-	return view('welcome');
-});
-
-Route::get('/file', [FileHandleController::class, 'index'])->name('file.handle.form');
+Route::get('/', [FileHandleController::class, 'index'])->name('file.handle.form');
 Route::get('/list-file', [FileHandleController::class, 'list'])->name('file.handle.list');
 Route::post('/create-file', [FileHandleController::class, 'store'])->name('file.handle.store');
 Route::post('/create-edit', [FileHandleController::class,'edit'])->name('file.handle.edit');
