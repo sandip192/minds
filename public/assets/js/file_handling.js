@@ -1,4 +1,24 @@
 $(document).ready(() => {
+    $(document).on("click", ".delete", function() {
+        var delete_id = $(this).data('id')
+        $.ajax({
+            url: route('file.handle.delete'),
+            method: 'delete',
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                delete_id
+            },
+            success(result) {
+                fetchListing();
+                toastr.success('removed successfully')
+            },
+            error(e) {
+            },
+        });
+    })
     fetchListing();
 
     function fetchListing() {
@@ -64,81 +84,65 @@ $(document).ready(() => {
 
     });
 
+    $(document).on('click', ".edit", function() {
+        var edit_id = $(this).attr('data-id')
+
+        $.ajax({
+            url: route('file.handle.edit'),
+            method: 'post',
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                edit_id
+            },
+            success(result) {
+                var resultfile = result
+                var modal_id = $("#myFilehanding").modal();
+                modal_id.find("#e_file_name").val(resultfile.files.name)
+                modal_id.find("#e_file_email").val(resultfile.files.email)
+                modal_id.find("#e_file_phone").val(resultfile.files.phone)
+                modal_id.find("#e_file_message").val(resultfile.files.message)
+                modal_id.find("#hiddenIds").val(resultfile.files.unique_id)
+                $("#myFilehanding").modal('show')
+            },
+            error(e) {
+
+            },
+        });
+    })
+    $(document).on("click", ".btnupdate", function() {
+        var name = $('#e_file_name').val();
+        var phone = $("#e_file_phone").val();
+        var email = $("#e_file_email").val();
+        var message = $("#e_file_message").val();
+        var hiddenIds = $("#hiddenIds").val();
+        $.ajax({
+            url: route('file.handle.update'),
+            method: 'post',
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                name,
+                phone,
+                email,
+                message,
+                hiddenIds
+            },
+            success(result) {
+                $("#myFilehanding").modal('hide')
+                toastr.success('updated successfully')
+                fetchListing();
+            },
+            error(e) {
+            },
+        });
+    })
+
 });
 
-$(document).on('click', ".edit", function() {
-    var edit_id = $(this).attr('data-id')
 
-    $.ajax({
-        url: route('file.handle.edit'),
-        method: 'post',
-        dataType: 'json',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        data: {
-            edit_id
-        },
-        success(result) {
-            var resultfile = result
-            var modal_id = $("#myFilehanding").modal();
-            modal_id.find("#e_file_name").val(resultfile.files.name)
-            modal_id.find("#e_file_email").val(resultfile.files.email)
-            modal_id.find("#e_file_phone").val(resultfile.files.phone)
-            modal_id.find("#e_file_message").val(resultfile.files.message)
-            modal_id.find("#hiddenIds").val(resultfile.files.unique_id)
-            $("#myFilehanding").modal('show')
-        },
-        error(e) {
 
-        },
-    });
-})
-$(document).on("click", ".btnupdate", function() {
-    var name = $('#e_file_name').val();
-    var phone = $("#e_file_phone").val();
-    var email = $("#e_file_email").val();
-    var message = $("#e_file_message").val();
-    var hiddenIds = $("#hiddenIds").val();
-    $.ajax({
-        url: route('file.handle.update'),
-        method: 'post',
-        dataType: 'json',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        data: {
-            name,
-            phone,
-            email,
-            message,
-            hiddenIds
-        },
-        success(result) {
-            $("#myFilehanding").modal('hide')
-            toastr.success('updated successfully')
-        },
-        error(e) {
-        },
-    });
-})
-$(document).on("click", ".delete", function() {
-    var delete_id = $(this).data('id')
-    $.ajax({
-        url: route('file.handle.delete'),
-        method: 'delete',
-        dataType: 'json',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        data: {
-            delete_id
-        },
-        success(result) {
-            fetchListing();
-            toastr.success('removed successfully')
-        },
-        error(e) {
-        },
-    });
-})
