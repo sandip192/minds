@@ -13,8 +13,8 @@ $(document).ready(() => {
                 $("#filehanding").html('');
 
                 var html = ''
-
-                if (json_file.files !== null) {
+console.log(json_file.files.length)
+                if (json_file.files !== null || json_file.files.length > 0) {
                     for (var i in json_file.files) {
                         html += '<tr>' +
                             '<td>' + json_file.files[i].name + '</td>' +

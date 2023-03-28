@@ -63,7 +63,7 @@ class FileHandleController extends Controller {
 	 */
 	public function list() {
 		try {
-			$get      = '[]';
+			$get      = [];
 			$fileName = 'uploads/file/' . 'file.json';
 			if (Storage::disk('public')->exists($fileName)) {
 				$s   = \Storage::disk('public')->get($fileName);
@@ -77,21 +77,6 @@ class FileHandleController extends Controller {
 			$data['data']    = [];
 			$data['message'] = $e->getMessage();
 			return response($data, 500);
-		}
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id) {
-		$get      = [];
-		$fileName = 'uploads/file/' . 'file.json';
-		if (Storage::disk('public')->exists($fileName)) {
-			$s   = \Storage::disk('public')->get($fileName);
-			$get = json_decode($s);
 		}
 	}
 
