@@ -33,9 +33,11 @@ $(document).ready(() => {
                 $("#filehanding").html('');
 
                 var html = ''
-
+                var date = ''
+                var newDate = ''
                 if (json_file.files !== null || json_file.files.length > 0) {
                     for (var i in json_file.files) {
+
                         html += '<tr>' +
                             '<td>' + json_file.files[i].name + '</td>' +
                             '<td>' + json_file.files[i].email + '</td>' +
@@ -78,6 +80,8 @@ $(document).ready(() => {
             },
             success(result) {
                 fetchListing();
+                $('#file_handling_form')[0].reset()
+                toastr.success('added successfully')
             },
             error(e) {},
         });
@@ -133,9 +137,10 @@ $(document).ready(() => {
                 hiddenIds
             },
             success(result) {
+
                 $("#myFilehanding").modal('hide')
                 toastr.success('updated successfully')
-                fetchListing();
+
             },
             error(e) {
             },

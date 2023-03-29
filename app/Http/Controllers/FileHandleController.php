@@ -42,7 +42,7 @@ class FileHandleController extends Controller {
 			$random_id               = 'UN' . rand(11111, 99999);
 			$file_data               = $request->all();
 			$file_data['unique_id']  = $random_id;
-			$file_data['created_at'] = date('d-m-Y');
+			$file_data['created_at'] = date('Y-d-m');
             $file_content[]         = $file_data;
 
 ///dd($file_content);
